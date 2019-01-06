@@ -1,0 +1,75 @@
+﻿
+@{
+    ViewBag.Title = "Show";
+}
+<style>
+    h2 {
+        color: white;
+        text-shadow: 1px 1px 1px black;
+    }
+
+    .album-image {
+        transition: transform 1s;
+    }
+
+        .album-image:hover {
+            transform: scale(1.1);
+        }
+</style>
+<script>
+    $(document).ready(function () {
+        $("#AddPhoto").click(function () {
+            $("#photo").click();
+        });
+        $("#photo").change(function () {
+            $("#add-photo-form").submit();
+        });
+    });
+
+</script>
+<div class="row">
+    <div class="col-md-12">
+        <h2>@ViewBag.Album.Name Album By <a href="Profile/Show/@ViewBag.Album.Profile.UserId">@ViewBag.Album.Profile.ApplicationUser.LastName @ViewBag.Album.Profile.ApplicationUser.FirstName</a></h2>
+        @if (ViewBag.Owner)
+        {
+            <form method="post" action="/Album/Delete/@ViewBag.Album.Id" style="">
+                @Html.HttpMethodOverride(HttpVerbs.Delete)
+                <button class="btn btn-xs btn-danger" title="Delete">Delete <i class="glyphicon glyphicon-minus-sign"></i></button>
+            </form>
+        }
+    </div>
+</div>
+<hr />
+<div class="row">
+    <div class="col-md-12 text-info text-center">@ViewBag.Album.Description</div>
+</div>
+<br />
+@if (ViewBag.Owner)
+{
+    <div class="row">
+       <button class="btn btn-xs btn-primary" style="margin-left:5%;" id="AddPhoto">Add Photos <i class="glyphicon glyphicon-plus"></i></button>
+        <form action="/Album/AddPhoto" method="post" enctype="multipart/form-data" id="add-photo-form" style="display:none">
+            <input type="hidden" name="id" value="@ViewBag.Album.Id" />
+            <input type="file" name="Photos" id="photo" multiple />
+        </form>
+    </div>
+}
+<div class="row card" style="padding-top:10px;padding-bottom:20px;">
+
+    @foreach (var Photo in ViewBag.Album.Photos)
+    {
+        <a href="/Album/ShowPhoto/@Photo.Id">
+            <div class="col-md-3 album-image">
+
+                <img style="margin-top:10px!important" src="~/images/@(Path.GetFileNameWithoutExtension(Photo.Location)+"250x250"+Path.GetExtension(Photo.Location))" alt="error" width="250" height="250" />
+
+            </div>
+        </a>
+    }
+
+    @if (ViewBag.Album.Photos.Count == 0)
+    {
+    <div class="text-center">No Content to show</div>
+    }
+</div>
+

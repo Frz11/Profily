@@ -1,0 +1,56 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - My ASP.NET Application</title>
+    <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.3.1.min.js"></script>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+
+</head>
+<script>
+    $(document).ready(function () {
+        $("#search-field").change(function () {
+            if ($(this).val() != "") {
+                location.href = "/Profile/Search/" + $(this).val();
+            }
+        });
+    });
+</script>
+<body background="#dfe3ee">
+    <div class="navbar navbar-inverse navbar-fixed-top" style="background-color:darkslateblue;color:white!important;border-color:seagreen;">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                @Html.ActionLink("Profily", "Index", "Home", new { area = "" }, new { @class = "navbar-brand", @style = "color:white!important;" })
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    @if (Request.IsAuthenticated)
+                    {
+                        <li><a href="" title="Requests"><i class="glyphicon glyphicon-heart"></i> Requests</a></li>
+                    }
+                    <li><input type="text" id="search-field" name="search" class="form-control" style="height:47px!important;width:140%!important" placeholder="Search..." /></li>
+                </ul>
+                @Html.Partial("_LoginPartial")
+            </div>
+        </div>
+    </div>
+    <div class="container body-content">
+        @RenderBody()
+        <hr />
+        <footer>
+            <p>&copy; @DateTime.Now.Year - Profily</p>
+        </footer>
+    </div>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+</body>
+</html>

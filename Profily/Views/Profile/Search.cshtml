@@ -1,0 +1,22 @@
+﻿
+@{
+    ViewBag.Title = "Search";
+}
+
+<style>
+    h2 {
+        color: white;
+        text-shadow: 1px 1px 1px black; 
+    }
+</style>
+<h2>Search Results for `@ViewBag.Query` </h2>
+<hr />
+@foreach(var Profile in ViewBag.Profiles)
+{
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card" style="padding:10px"><a href="/Profile/Show/@Profile.Id">@Profile.LastName @Profile.FirstName</a></div>
+        </div>
+    </div>
+}
+

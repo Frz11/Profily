@@ -1,0 +1,31 @@
+﻿
+@{
+    ViewBag.Title = "Create";
+}
+
+<h2 style="color:white;text-shadow:2px 2px 2px 0px black;">Create Album For @ViewBag.Profile.ApplicationUser.LastName @ViewBag.Profile.ApplicationUser.FirstName</h2>
+<hr />
+
+<form action="/Album/Create" method="post" enctype="multipart/form-data">
+<input type="hidden" name="ProfileId" value="@ViewBag.Profile.UserId"/> 
+<div class="row">
+    <div class="col-md-9" style="margin-left:10%;">
+        <div class="form-group">
+            <label>Name</label>
+            <input type="text" class="form-control" name="Name" />
+        </div>
+        <div class="form-group">
+            <label>Description</label>
+            <textarea class="form-control" name="Description" rows="4"></textarea>
+        </div>
+        <div class="form-group">
+            <label>Photos</label>
+            <input type="file" name="Photos" class="form-control-file" style="width:100%!important;" multiple />
+        </div>
+
+        <div class="form-group">
+            <button class="btn btn-success">Create</button>
+        </div>
+    </div>
+</div>
+</form>

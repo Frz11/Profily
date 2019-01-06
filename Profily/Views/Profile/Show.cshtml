@@ -1,0 +1,167 @@
+﻿<style>
+    .album-text{
+        transition: transform .9s; /* Animation */
+    }
+    .album-text:hover{
+        transform: scale(1.5);
+    }
+    #changeBackgroundButton{
+       float:right;
+       margin-right:5%;
+    }
+    .text-user {
+        color: white;
+        text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+        font-size: 2.5em;
+    }
+ 
+    .album-card {
+        text-align: center;
+        background: url('/images/album-cover.png');
+        background-size: contain;
+        padding: 30px;
+        color:whitesmoke;
+        text-shadow:2px 2px 2px black;
+        font-size:1.5em;
+    }
+    .album-card{
+        border:1px solid gray;
+        border-radius:30px;
+    }
+</style>
+<script>
+    $(document).ready(function () {
+        $("#profile-head").css("background", "url('/images/@ViewBag.BackgroundPhoto')");
+        $("#profile-head").css("background-size", "cover");
+        $("#changeBackgroundButton").click(function () {
+            $("#background-photo").click()
+        });
+        $("#background-photo").change(function () {
+            $("#bkg-form").submit();
+        });
+        $("#changeProfileButton").click(function () {
+            $("#profile-photo").click();
+        });
+        $("#profile-photo").change(function () {
+            $("#profile-form").submit();
+        });
+
+    });
+    
+</script>
+@{
+    ViewBag.Title = "View";
+}
+<div id="profile-head" class="form-group" style="background-size:cover;background-repeat:no-repeat">
+    
+    @if (ViewBag.Owner)
+    {
+        <form id="bkg-form" style="display:none" action="/Profile/ChangeBackground" method="post" enctype="multipart/form-data">
+            <input type="hidden" name="Id" value="@ViewBag.User.Id" />
+            <input type="file" id="background-photo" name="backgroundPhoto" />
+        </form>
+        <button class="btn btn-xs btn-info" z-index="99999" id="changeBackgroundButton">Change background picture</button>
+    }
+    <div class="row">
+        <div class="col-md-12">
+            <div class="center-block">
+                <img class="center-block" src="~/images/@ViewBag.ProfilePhoto" width="200" height="200" alt="error" style="border-radius:50px;" />
+                @if (ViewBag.Owner)
+                {
+                    <form style="display:none" id="profile-form" action="/Profile/ChangeProfilePhoto" method="post" enctype="multipart/form-data">
+                        <input type="hidden" name="Id" value="@ViewBag.User.Id" />
+                        <input type="file" name="profilePhoto" id="profile-photo" />
+                    </form>
+                    <button class="btn btn-xs btn-info center-block" id="changeProfileButton">Change profile picture <span class="glyphicon glyphicon-edit"></span></button>
+
+                }
+            </div>
+        
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="text-center text-user">@ViewBag.User.LastName @ViewBag.User.FirstName</div>
+        </div>
+    </div>
+    <br />
+    <hr />
+</div>
+<div class="row">
+    <div class="col-md-4" style="font-size:1.3em;">
+        @if (ViewBag.Owner)
+        {
+            <a href="/Profile/Edit/@ViewBag.User.Id" style="margin-bottom:20px!important;"><button class="btn btn-xs btn-info">Edit Profile <i class="glyphicon glyphicon-pencil"></i></button></a>
+
+        }
+        <div class="row" style="margin-top:1px;">
+            <div class="col-md-8 card">
+                <h2>Description</h2>
+                <hr />
+                <div class="text-info" style="padding-bottom:10px">@ViewBag.User.Profile.Description</div>
+            </div>
+        </div>
+        <br />
+        <div class="row">
+            <div class="col-md-8 card">
+                <h2>About</h2>
+                <hr />
+                <p><i class="glyphicon glyphicon-time"></i> Birtday on <span class="text-info">@ViewBag.User.Profile.Birthday</span></p>
+                <p><i class="glyphicon glyphicon-bitcoin"></i> Works at <span class="text-info">@ViewBag.User.Profile.Work</span></p>
+                <p><i class="glyphicon glyphicon-blackboard"></i> Finished <span class="text-info">@ViewBag.User.Profile.School</span></p>
+            </div>
+        </div>
+        <br />      
+    </div>
+    <div class="col-md-8">
+        <div class="row">
+            <div class="col-md-11">
+                <div class="row" style="margin-top:5px!important">
+                    <div class="col-md-12 card">
+                        <h2 class="text-center">Albums</h2>
+                        <hr />
+                        <div class="row">
+                            @if (ViewBag.Owner)
+                            {
+                            <div class="col-md-12 text-center">
+                                <a href="/Album/Create/@ViewBag.User.Id"><button class="btn btn-lg btn-primary">Create New Photo Album <i class="glyphicon glyphicon-plus"></i></button></a>
+                            </div>
+                            }
+                            <div class="col-md-12">&nbsp;</div>
+                            <div style="padding:10px;">
+                                @if (ViewBag.Albums.Length > 0)
+                                {
+                                    foreach (var Album in ViewBag.Albums)
+                                    {
+                                        <a href="/Album/Show/@Album.Id">
+                                            <div class="col-md-4 album-card">
+                                                
+                                                <div class="album-text">@Album.Name</div>
+
+                                            </div>
+                                        </a>
+                                    }
+
+                                }
+
+                                else
+                                {
+                                    <div class="row">&nbsp;</div>
+                                    <div class="row">&nbsp;</div>
+
+                                    <div class="row" style="padding-bottom:30px;">
+                                        <div class="col-md-12">
+                                            <div style="text-align:center;color:gray;font-size:1.5em;">No albums to show</div>
+                                        </div>
+                                    </div>
+                                    <div class="row">&nbsp;</div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
