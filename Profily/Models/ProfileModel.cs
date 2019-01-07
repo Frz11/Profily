@@ -12,13 +12,16 @@ namespace Profily.Models
 {
     public class Profile
     {
-   
+
         public String Description { get; set; }
 
         public String Birthday { get; set; }
 
         public String Work { get; set; }
         public String School { get; set; }
+
+        [Required]
+        public bool IsPrivate { get; set; }
 
         [Required]
         [Key,ForeignKey("ApplicationUser")]
@@ -29,6 +32,8 @@ namespace Profily.Models
         public virtual ICollection<Album> Albums { get; set; }
 
         public virtual ICollection<ProfileGroup> ProfileGroups { get; set; }
+
+        public virtual ICollection<Comment> Comments { get; set; }
 
 
        

@@ -29,7 +29,7 @@
 </script>
 <div class="row">
     <div class="col-md-12">
-        <h2>@ViewBag.Album.Name Album By <a href="Profile/Show/@ViewBag.Album.Profile.UserId">@ViewBag.Album.Profile.ApplicationUser.LastName @ViewBag.Album.Profile.ApplicationUser.FirstName</a></h2>
+        <h2>@ViewBag.Album.Name Album By <a href="/Profile/Show/@ViewBag.Album.Profile.UserId">@ViewBag.Album.Profile.ApplicationUser.LastName @ViewBag.Album.Profile.ApplicationUser.FirstName</a></h2>
         @if (ViewBag.Owner)
         {
             <form method="post" action="/Album/Delete/@ViewBag.Album.Id" style="">

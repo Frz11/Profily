@@ -42,6 +42,17 @@
                 <button class="btn btn-success">Save</button>
             </div>
         </form>
+        <div class="btn-group">
+            @if (!ViewBag.Profile.IsPrivate)
+            {
+                <a href="/Profile/SetPrivate/@ViewBag.Profile.UserId"><button class="btn btn-primary">Set Private</button></a>
+            } else
+            {
+                <a href="/Profile/SetPublic/@ViewBag.Profile.UserId"><button class="btn btn-primary">Set Public</button></a>
+            }
+           <form style="float:right" action="/Profile/Delete/@ViewBag.Profile.UserId" method="post">@Html.HttpMethodOverride(HttpVerbs.Delete)<button class="btn btn-danger">Delete</button></form>
+        </div>      
+         
     </div>
 </div>
 

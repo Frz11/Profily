@@ -2,6 +2,7 @@
 using Profily.Models;
 using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -33,6 +34,51 @@ namespace Profily.Controllers
                 return true;
             }
             return false;
+        }
+        protected String Relation(String id)
+        {
+            if (Request.IsAuthenticated)
+            {
+                if (User.Identity.GetUserId() != id)
+                {
+                    var Request =
+                        applicationContext.Database.SqlQuery<FriendRequest>("SELECT * FROM FriendRequests" +
+                        " WHERE SenderId = @sId AND ReceiverId = @rId",
+                        new SqlParameter("sId", User.Identity.GetUserId()), new SqlParameter("rId", id)).FirstOrDefault();
+
+
+
+                    if (Request != null)
+                    {
+                        if (Request.Accepted)
+                        {
+                            return "Friend";
+                        }
+                        else
+                        {
+                            return "Pending";
+                        }
+                    }
+
+                    Request =
+                      applicationContext.Database.SqlQuery<FriendRequest>("SELECT * FROM FriendRequests" +
+                      " WHERE SenderId = @rId AND ReceiverId = @sId",
+                      new SqlParameter("sId", User.Identity.GetUserId()), new SqlParameter("rId", id)).FirstOrDefault();
+                    if (Request != null)
+                    {
+                        if (Request.Accepted)
+                        {
+                            return "Friend";
+
+                        }
+                        else
+                        {
+                            return "Reciever";
+                        }
+                    }
+                }
+            }
+            return null;
         }
        
     }

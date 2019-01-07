@@ -158,7 +158,7 @@ namespace Profily.Controllers
                 if (result.Succeeded)
                 {
 
-                    Profile profile = new Profile { UserId = user.Id, Description = "My Profile!" };
+                    Profile profile = new Profile { UserId = user.Id, Description = "My Profile!", IsPrivate = false };
                     try
                     {
                         applicationContext.Profiles.Add(profile);

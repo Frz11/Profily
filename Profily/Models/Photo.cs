@@ -28,6 +28,8 @@ namespace Profily.Models
         [ForeignKey("Album")]
         public int AlbumId { get; set; }
         public virtual Album Album { get; set; }
+
+        public virtual ICollection<Comment> Comments { get; set; }
     }
   
 }

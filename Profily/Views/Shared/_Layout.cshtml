@@ -33,7 +33,9 @@
                 <ul class="nav navbar-nav">
                     @if (Request.IsAuthenticated)
                     {
-                        <li><a href="" title="Requests"><i class="glyphicon glyphicon-heart"></i> Requests</a></li>
+                        <li><a href="/FriendRequest/Index" title="Requests"><i class="glyphicon glyphicon-heart"></i> Requests</a></li>
+                        <li><a href="/FriendRequest/Friends" title="Friends"><i class="glyphicon glyphicon-star"></i> Friends</a></li>
+
                     }
                     <li><input type="text" id="search-field" name="search" class="form-control" style="height:47px!important;width:140%!important" placeholder="Search..." /></li>
                 </ul>

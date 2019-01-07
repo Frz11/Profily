@@ -175,6 +175,7 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AlbumController.cs" />
+    <Compile Include="Controllers\FriendRequestController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\MainController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
@@ -266,6 +267,8 @@
     <Content Include="Views\Album\Show.cshtml" />
     <Content Include="Views\Album\ShowPhoto.cshtml" />
     <Content Include="Views\Profile\Search.cshtml" />
+    <Content Include="Views\FriendRequest\Index.cshtml" />
+    <Content Include="Views\FriendRequest\Friends.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />

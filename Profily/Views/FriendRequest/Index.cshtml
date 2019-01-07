@@ -1,0 +1,41 @@
+﻿
+@{
+    ViewBag.Title = "Friend Requests";
+}
+<style>
+    h2 {
+        color: white;
+        text-shadow: 1px 1px 1px black;
+    }
+</style>
+
+<h2>Friend Requests</h2>
+<hr />
+
+@if (ViewBag.Profiles.Count == 0)
+{
+    <div class="row card" style="padding-top:5%!important;padding-bottom:5%;text-align:center;font-size:1.5em;">
+        <div class="col-md-12">
+            No new friend requests! :)
+        </div>
+    </div>
+}
+else
+{
+    foreach (var Profile in ViewBag.Profiles)
+    {
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card" style="padding:10px">
+                <a href="/Profile/Show/@Profile.UserId">@Profile.ApplicationUser.LastName @Profile.ApplicationUser.FirstName</a>
+                <a href="/FriendRequest/AcceptRequest/@Profile.UserId">
+                    <button class="btn btn-default btn-xs">Accept <i class="glyphicon glyphicon-ok"></i></button>
+                </a>
+                <a href="/FriendRequest/RemoveRequest/@Profile.UserId"><button class="btn btn-default btn-xs">Decline <i class="glyphicon glyphicon-remove"></i></button></a>
+
+            </div>
+        </div>
+    </div>
+    <br />
+    }
+}

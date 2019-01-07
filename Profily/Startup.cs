@@ -37,7 +37,7 @@ namespace Profily
                 var adminCreated = userManager.Create(user, "Admin1!");
                 if (adminCreated.Succeeded)
                 {
-                    Profile profile = new Profile { UserId = user.Id, Description = "My Profile!" };
+                    Profile profile = new Profile { UserId = user.Id, Description = "My Profile!",IsPrivate = false };
                     try
                     {
                         context.Profiles.Add(profile);

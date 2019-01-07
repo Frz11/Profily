@@ -53,7 +53,7 @@
     ViewBag.Title = "View";
 }
 <div id="profile-head" class="form-group" style="background-size:cover;background-repeat:no-repeat">
-    
+
     @if (ViewBag.Owner)
     {
         <form id="bkg-form" style="display:none" action="/Profile/ChangeBackground" method="post" enctype="multipart/form-data">
@@ -76,7 +76,7 @@
 
                 }
             </div>
-        
+
         </div>
     </div>
     <div class="row">
@@ -84,6 +84,45 @@
             <div class="text-center text-user">@ViewBag.User.LastName @ViewBag.User.FirstName</div>
         </div>
     </div>
+    @if (ViewBag.CurrentUser != ViewBag.User.Id && Request.IsAuthenticated)
+    {
+        if (!ViewBag.Friend && !ViewBag.Pending && !ViewBag.Receiver)
+        {
+            <div class="row">
+                <div class="col-md-12 center-block">
+                   <form action="/FriendRequest/SendRequest/" method="get"><input type="hidden" value="@ViewBag.User.Id" name="id"/><button class="btn btn-info btn-xs center-block">Send friend request <i class="glyphicon glyphicon-send"></i></button></form>
+                </div>
+            </div>
+        }
+        else if (ViewBag.Pending)
+        {
+            <div class="row">
+                <div class="col-md-12 center-block">
+                    <button class="btn btn-default btn-xs center-block" disabled>Pending <i class="glyphicon glyphicon-time"></i></button>
+                </div>
+            </div>
+        }
+        else if(ViewBag.Receiver)
+        {
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="center-block" style="width:12%!important">
+                        <a href="/FriendRequest/AcceptRequest/@ViewBag.User.Id">
+                            <button class="btn btn-default btn-xs">Accept <i class="glyphicon glyphicon-ok"></i></button>
+                        </a>
+                        <a href="/FriendRequest/RemoveRequest/@ViewBag.User.Id"><button class="btn btn-default btn-xs">Decline <i class="glyphicon glyphicon-remove"></i></button></a>
+                    </div>
+                </div>
+            </div>
+        } else
+        {
+            <div class="row">
+                <div class="col-md-12 center-block">
+                    <a href="/FriendRequest/RemoveRequest/@ViewBag.User.Id"><button class="btn btn-default btn-xs center-block">Unfriend <i class="glyphicon glyphicon-remove"></i></button></a>
+                </div>          
+            </div>
+        }
+    }
     <br />
     <hr />
 </div>
