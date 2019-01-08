@@ -43,6 +43,8 @@ namespace Profily.Models
         public DbSet<ProfileGroup> ProfileGroups { get; set; }
 
         public DbSet<FriendRequest> FriendRequests { get; set; }
+        
+        public DbSet<Message> Messages { get; set; }
         public ApplicationDbContext()
             : base("DefaultConnection", throwIfV1Schema: false)
         {

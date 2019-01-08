@@ -17,6 +17,8 @@ namespace Profily.Controllers
     public class ProfileController : MainController
     {
 
+    
+
         [AllowAnonymous]
         public ActionResult Search(String id)
         {

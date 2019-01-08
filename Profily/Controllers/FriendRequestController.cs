@@ -9,6 +9,7 @@ using System.Web.Mvc;
 
 namespace Profily.Controllers
 {
+    [Authorize]
     public class FriendRequestController : MainController
     {
         public ActionResult Friends()

@@ -1,0 +1,18 @@
+﻿
+@{
+    ViewBag.Title = "ListUsers";
+}
+
+<h2>List Users</h2>
+<hr />
+
+@foreach(var User in ViewBag.Users)
+{
+    <div class="row">
+        <div class="col-md-3 card">
+            <a href="User.Id">@User.LastName @User.FirstName</a>
+        </div>
+    </div>
+    <br />
+}
+

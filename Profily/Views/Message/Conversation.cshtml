@@ -1,0 +1,66 @@
+﻿
+@{
+    ViewBag.Title = "Conversation";
+}
+<script>
+    $(document).ready(function () {
+        $("#send-message").keypress(function (e) {
+            var keycode = (e.keyCode ? e.keyCode : e.which);
+            if (keycode == "13") {
+                if ($(this).val() != "") {
+                    $("#send-message-form").submit();
+                } else {
+                    alert("Cannot send blank message!");
+                    $(this).val("");
+                }
+            }
+        });
+    });
+</script>
+<div style="padding-left:10%;padding-right:10%;padding-top:5%;">
+    <div class="row card">
+        <div class="col-md-12">
+            <div class="row header">
+                <div class="col-md-12">
+                    <h2>Conversation with <a href="@ViewBag.Friend.Id">@ViewBag.Friend.LastName @ViewBag.Friend.FirstName</a></h2>
+                    <hr />
+                </div>
+            </div>
+            <div class="row body">
+                @if(ViewBag.Messages.Length == 0)
+                {
+                    <div class="col-md-12 text-center" style="padding-top:5%;padding-bottom:5%;font-size:1.3em;">
+                        No messages.
+                    </div>
+                }
+                else
+                {
+                    foreach(var Message in ViewBag.Messages)
+                    {
+                        //Your message
+                        if(Message.Receiver == ViewBag.Friend.Id)
+                        {
+                            <div class="col-md-12">You(@Message.SentAt):@Message.Text</div>
+                        } else
+                        {
+                            <div class="col-md-12" class="text-info">
+                                <a href="@ViewBag.Friend.Id">@ViewBag.Friend.LastName @ViewBag.Friend.FirstName</a>
+                                (@Message.SentAt):@Message.Text
+                            </div>
+                        }
+                    }
+                }
+            </div>
+        </div>
+       
+        <div class="send row">
+            <form action="/Message/Send/@ViewBag.Friend.Id" id="send-message-form" method="post">
+                <div class="col-md-12"><hr /></div>
+                <div class="col-md-12">
+                    <textarea name="Text" id="send-message" class="form-control" placeholder="Type..." rows="4"></textarea>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+

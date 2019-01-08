@@ -14,7 +14,13 @@ namespace Profily.Controllers
         // GET: Main
         protected ApplicationDbContext applicationContext = new ApplicationDbContext();
 
-
+        [Authorize(Roles = "Administrator")]
+        public ActionResult ListUsers()
+        {
+            ViewBag.Users = applicationContext.Users;
+            return View();
+        }
+        
         protected bool IsImage(HttpPostedFileBase file)
         {
             if (file.ContentType.Contains("image"))

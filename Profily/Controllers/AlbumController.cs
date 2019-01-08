@@ -64,6 +64,7 @@ namespace Profily.Controllers
             return RedirectToAction("ShowPhoto", new { id = PhotoId });
         }
 
+        [AllowAnonymous]
         public ActionResult ShowPhoto(string id)
         {
             int Id = Convert.ToInt32(id);
@@ -140,6 +141,7 @@ namespace Profily.Controllers
             SavePhotos(Photos, id);
             return RedirectToAction("Show", new { id = id });
         }
+        [AllowAnonymous]
         // GET: Album
         public ActionResult Show(string id)
         {

@@ -14,7 +14,7 @@
 @if (ViewBag.Friends.Count == 0)
 {
     <div class="row card" style="padding-top:5%;padding-bottom:5%;font-size:1.5em">
-        <div class="col-md-12">
+        <div class="col-md-12 text-center">
             No Friends :(
         </div>
     </div>
@@ -26,8 +26,10 @@ else
         <div class="row">
             <div class="col-md-12">
                 <div class="card" style="padding:10px">
-                <a href="/Profile/Show/@Friend.Id">@Friend.LastName @Friend.FirstName</a>
-                <a href="/FriendRequest/RemoveRequest/@Friend.Id"><button class="btn btn-default">Unfriend <i class="glyphicon glyphicon-remove"></i></button></a>
+                    <a href="/Profile/Show/@Friend.Id">@Friend.LastName @Friend.FirstName</a>
+                    <a href="/FriendRequest/RemoveRequest/@Friend.Id"><button class="btn btn-default">Unfriend <i class="glyphicon glyphicon-remove"></i></button></a>
+                    <a href="/Message/Conversation/@Friend.Id"><button class="btn btn-primary">Conversation <i class="glyphicon glyphicon-user"></i></button></a>
+
                 </div>
             </div>
         </div>
