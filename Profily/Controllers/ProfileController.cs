@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.Owin;
 using Profily.Models;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
-using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -17,20 +17,18 @@ namespace Profily.Controllers
     public class ProfileController : MainController
     {
 
-    
-
         [AllowAnonymous]
         public ActionResult Search(String id)
         {
             String[] words = id.Split(' ');
             String word1 = words[0].ToLower();
             String word2 = " ";
-            if (words.Length == 2) 
+            if (words.Length == 2)
             {
                 word2 = words[1].ToLower();
             }
             List<ApplicationUser> Profiles = new List<ApplicationUser>();
-            foreach(var user in applicationContext.Users)
+            foreach (var user in applicationContext.Users)
             {
                 if ((user.FirstName.ToLower().Contains(word1) || user.LastName.ToLower().Contains(word2)
                 || user.FirstName.ToLower().Contains(word2) || user.LastName.ToLower().Contains(word1)) && (!user.Profile.IsPrivate || User.IsInRole("Administrator") || Relation(user.Id) == "Friend"))
@@ -42,6 +40,9 @@ namespace Profily.Controllers
             ViewBag.Query = id;
             return View();
         }
+
+
+
         // GET: Profile
         [AllowAnonymous]
         public ActionResult Show(String id)
@@ -49,15 +50,15 @@ namespace Profily.Controllers
             if (id == "" || id == null)
             {
                 id = User.Identity.GetUserId();
-                if(!Request.IsAuthenticated)
+                if (!Request.IsAuthenticated)
                 {
                     return RedirectToAction("Login", "Account");
                 }
             }
-            
+
             var user = applicationContext.Users.Find(id);
             ViewBag.User = user;
-            var album = applicationContext.Albums.SqlQuery("Select * from Albums where ProfileId=@pId And IsDefault = 'True'",new SqlParameter("pId",user.Id)).FirstOrDefault();
+            var album = applicationContext.Albums.SqlQuery("Select * from Albums where ProfileId=@pId And IsDefault = 'True'", new SqlParameter("pId", user.Id)).FirstOrDefault();
             var albums = applicationContext.Albums.SqlQuery("Select * from Albums where ProfileId=@pId And IsDefault = 'False'", new SqlParameter("pId", user.Id)).ToArray();
             var photos = from photo in album.Photos select photo;
             ViewBag.ProfilePhoto = "no-photo.png";
@@ -69,7 +70,7 @@ namespace Profily.Controllers
             ViewBag.Pending = false;
             ViewBag.Receiver = false;
 
-            if(Relation(id) == "Friend")
+            if (Relation(id) == "Friend")
             {
                 ViewBag.Friend = true;
             }
@@ -77,12 +78,13 @@ namespace Profily.Controllers
             {
                 ViewBag.Pending = true;
 
-            } else if (Relation(id) == "Receiver")
+            }
+            else if (Relation(id) == "Receiver")
             {
                 ViewBag.Receiver = true;
             }
 
-            if(!ViewBag.Owner && (user.Profile.IsPrivate && !ViewBag.Friend))
+            if (!ViewBag.Owner && (user.Profile.IsPrivate && !ViewBag.Friend))
             {
                 return Content("No Access!");
             }
@@ -134,14 +136,14 @@ namespace Profily.Controllers
                 if (photo.ProfilePhoto)
                 {
                     ViewBag.ProfilePhoto = Path.GetFileNameWithoutExtension(photo.Location) + "200x200" + Path.GetExtension(photo.Location);
-                   
+
                 }
                 if (photo.BackgroundPhoto)
                 {
                     ViewBag.BackgroundPhoto = photo.Location;
                 }
             }
-            
+
             return View();
         }
         [HttpPost]
@@ -149,19 +151,19 @@ namespace Profily.Controllers
         {
             //return Content(Id);
             var user = applicationContext.Users.Find(Id);
-          
+
             if (!IsOwner(Id) && !User.IsInRole("Administrator"))
             {
                 return Content("No access!");
             }
-            if(backgroundPhoto != null && backgroundPhoto.ContentLength > 0)
+            if (backgroundPhoto != null && backgroundPhoto.ContentLength > 0)
             {
                 if (IsImage(backgroundPhoto))
                 {
                     string NewFileName = Guid.NewGuid().ToString("N") + Path.GetExtension(backgroundPhoto.FileName);
                     string path = Path.Combine(Server.MapPath("~/images"), NewFileName);
                     backgroundPhoto.SaveAs(path);
-                    var album = applicationContext.Albums.SqlQuery("Select * from Albums where ProfileId=@pId And IsDefault = 'True'",new SqlParameter("pId",user.Id)).FirstOrDefault();
+                    var album = applicationContext.Albums.SqlQuery("Select * from Albums where ProfileId=@pId And IsDefault = 'True'", new SqlParameter("pId", user.Id)).FirstOrDefault();
                     var profile = applicationContext.Users.Find(Id).Profile;
                     foreach (var ph in album.Photos)
                     {
@@ -179,7 +181,7 @@ namespace Profily.Controllers
                     //applicationContext.Profiles.Find(profile.UserId).Photos.Add(photo);
                     applicationContext.Photos.Add(photo);
                     applicationContext.SaveChanges();
-                    
+
                     return RedirectToAction("Show", new { id = profile.UserId });
                 }
                 else
@@ -195,7 +197,7 @@ namespace Profily.Controllers
             {
                 return Content("No Access!");
             }
-            if(profilePhoto != null && profilePhoto.ContentLength > 0)
+            if (profilePhoto != null && profilePhoto.ContentLength > 0)
             {
                 if (IsImage(profilePhoto))
                 {
@@ -205,7 +207,7 @@ namespace Profily.Controllers
                     //create thumb
                     Image image = Image.FromFile(path);
                     Image thumb = image.GetThumbnailImage(200, 200, () => false, IntPtr.Zero);
-                    thumb.Save(Path.Combine(Server.MapPath("~/images"),Path.GetFileNameWithoutExtension(path) + "200x200" + Path.GetExtension(path)));
+                    thumb.Save(Path.Combine(Server.MapPath("~/images"), Path.GetFileNameWithoutExtension(path) + "200x200" + Path.GetExtension(path)));
 
                     var profile = applicationContext.Users.Find(Id).Profile;
                     var album = applicationContext.Albums.SqlQuery("Select * from Albums where ProfileId=@pId And IsDefault = 'True'", new SqlParameter("pId", Id)).FirstOrDefault();
@@ -240,29 +242,42 @@ namespace Profily.Controllers
             }
         }
 
+        public ActionResult MakeAdmin(String Id)
+        {
+            var UserManager = HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
+            UserManager.AddToRole(Id, "Administrator");
+            return RedirectToAction("Show", new { id = Id });
+        }
+
         [HttpGet]
         public ActionResult Edit(String Id)
         {
+
             if (!IsOwner(Id) && !User.IsInRole("Administrator"))
             {
                 return Content("No Access");
             }
+            if (User.IsInRole("Administrator"))
+                ViewBag.isAdmin = true;
+            else
+                ViewBag.isAdmin = false;
 
             var profile = applicationContext.Profiles.Find(Id);
+
             ViewBag.Profile = profile;
-           
+
             return View();
 
         }
         [HttpPut]
-        public ActionResult Edit(String FirstName,String LastName,Profile requestProfile)
+        public ActionResult Edit(String FirstName, String LastName, Profile requestProfile)
         {
             try
             {
                 Profile profile = applicationContext.Profiles.Find(requestProfile.UserId);
                 if (TryUpdateModel(profile))
                 {
-                   
+
                     profile.ApplicationUser.FirstName = FirstName;
                     profile.ApplicationUser.LastName = LastName;
                     profile.Work = requestProfile.Work;
@@ -271,11 +286,12 @@ namespace Profily.Controllers
                     profile.School = requestProfile.School;
                     applicationContext.SaveChanges();
 
-                } 
+                }
 
-                return RedirectToAction("Show",new {id = requestProfile.UserId});
-                
-            } catch (Exception e)
+                return RedirectToAction("Show", new { id = requestProfile.UserId });
+
+            }
+            catch (Exception e)
             {
                 return View();
             }
@@ -296,6 +312,8 @@ namespace Profily.Controllers
 
             return RedirectToAction("Show", new { id = id });
         }
+
+
         [HttpDelete]
         public ActionResult Delete(String id)
         {
@@ -306,16 +324,17 @@ namespace Profily.Controllers
             }
             foreach (var album in applicationUser.Profile.Albums)
             {
-                foreach(var photo in album.Photos) {
+                foreach (var photo in album.Photos)
+                {
                     applicationContext.Comments.RemoveRange(photo.Comments);
                     applicationContext.SaveChanges();
-                   
+
                 }
                 applicationContext.Photos.RemoveRange(album.Photos);
                 applicationContext.SaveChanges();
             }
             applicationContext.Albums.RemoveRange(applicationUser.Profile.Albums);
-            foreach(var comment in applicationUser.Profile.Comments)
+            foreach (var comment in applicationUser.Profile.Comments)
             {
                 applicationContext.Comments.Remove(comment);
                 applicationContext.SaveChanges();
@@ -332,6 +351,6 @@ namespace Profily.Controllers
         }
 
     }
-   
-   
+
+
 }
